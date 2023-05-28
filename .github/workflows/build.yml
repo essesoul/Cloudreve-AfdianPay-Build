@@ -1,0 +1,118 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  Linux-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          git clone https://github.com/essesoul/Cloudreve-AfdianPay.git
+          cd Cloudreve-AfdianPay/src
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+
+
+      - name: Build
+        run: |
+          cd Cloudreve-AfdianPay/src
+          pyinstaller -F cloudreve_pay.py
+          
+
+      - name: Git Push
+        run: |
+          git pull origin main
+          cp Cloudreve-AfdianPay/src/.env Cloudreve-AfdianPay/src/dist
+          cp -r Cloudreve-AfdianPay/src/dist/. Linux
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f Linux
+          git commit -m "Build Cloudreve_pay"
+          git push -u -f origin main
+
+
+  Mac-build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          git clone https://github.com/essesoul/Cloudreve-AfdianPay.git
+          cd Cloudreve-AfdianPay/src
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+
+
+      - name: Build
+        run: |
+          cd Cloudreve-AfdianPay/src
+          pyinstaller -F cloudreve_pay.py
+          
+
+      - name: Git Push
+        run: |
+          git pull origin main
+          cp Cloudreve-AfdianPay/src/.env Cloudreve-AfdianPay/src/dist
+          cp -r Cloudreve-AfdianPay/src/dist/ MacOS
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f MacOS
+          git commit -m "Build Cloudreve_pay"
+          git push -u -f origin main
+
+
+  Windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          git clone https://github.com/essesoul/Cloudreve-AfdianPay.git
+          cd Cloudreve-AfdianPay/src
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+
+
+      - name: Build
+        run: |
+          cd Cloudreve-AfdianPay/src
+          pyinstaller -F cloudreve_pay.py
+          
+
+      - name: Git Push
+        run: |
+          git pull origin main
+          cp Cloudreve-AfdianPay/src/.env Cloudreve-AfdianPay/src/dist
+          COPY Cloudreve-AfdianPay/src/dist/* Windows
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f Windows
+          git commit -m "Build Cloudreve_pay"
+          git push -u -f origin main
